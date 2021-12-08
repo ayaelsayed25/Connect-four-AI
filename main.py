@@ -1,4 +1,3 @@
-import random
 from tkinter import *
 from PIL import Image, ImageTk
 import networkx as nx
@@ -59,7 +58,7 @@ def showGraph():
 
 
 def showHint():
-    global turn
+    global turn, depth
     if turn == 0:
         turn = 1
         changeDepth()
@@ -73,7 +72,7 @@ def showHint():
 
 
 def play(col):
-    global turn, depth
+    global turn, depth, currentState
     if turn == 0:
         firstEmptyRow = currentState.first_empty_row(col)
         if firstEmptyRow != -1:
@@ -89,7 +88,6 @@ def play(col):
             playerScoreTxt.insert(END, str(pScore))
             turn = 1
             # computer turn
-            global currentState
             changeDepth()
             maxEval, currentState = minimax(currentState, depth, True, True)
             depth = 3

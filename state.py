@@ -9,12 +9,12 @@ class State:
     computer_score = 0
     player_move = -1
 
-    def __init__(self, board, player_move):
+    def __init__(self, board, player_move=-1):
         self.board = board
         self.player_move = player_move
 
     def game_play(self, column):
-        self.board[self.first_empty_index(column)] = '2'
+        self.board = self.board[:self.first_empty_index(column)] + '2' + self.board[self.first_empty_index(column)+1:]
 
     def get_index(self):
         return self.player_move % board_height, self.player_move // board_height
@@ -46,9 +46,9 @@ class State:
             if empty_index != -1:
                 board = self.board
                 if computer_turn:
-                    board[empty_index] = '1'
+                    board = board[:empty_index] + '1' + board[empty_index+1:]
                 else:
-                    board[empty_index] = '2'
+                    board = board[:empty_index] + '2' + board[empty_index+1:]
                 states.append(State(board, empty_index))
             else:
                 states.append(None)
