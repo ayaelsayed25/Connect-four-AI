@@ -20,7 +20,8 @@ color2 = "grey"
 depth = 3
 turn = 0  # 0 represents player turn and 1 represents commp turn
 board = []
-currentState = State("000000000000000000000000000000000000000000")
+pruning = False
+currentState = State("000000000000000000000000000000000000000000", -1)
 # player color icon
 playerImg = Image.open('./images/pink.jpg')
 playertk = ImageTk.PhotoImage(playerImg)
@@ -38,7 +39,7 @@ hintCol = 0
 
 
 # functions
-def changeColor():
+def changeColor(): #swap colors between player and computer
     global color1
     global color2
     color1, color2 = color2, color1
@@ -58,12 +59,12 @@ def showGraph():
     plt.show()
 
 
-def showHint():
+def showHint(): #Tell the players which game is the best for them
     global turn
     if turn == 0:
         turn = 1
         changeDepth()
-        maxEval, state = minimax(currentState, depth, False, prune=True)
+        maxEval, state = minimax(currentState, depth, False)
         depth = 3
         global hintRow, hintCol
         hintRow, hintCol = state.get_index()
@@ -73,29 +74,35 @@ def showHint():
 
 
 def play(col):
-    global turn, depth
+    global turn, depth, currentState
+    #if it's the player turn
     if turn == 0:
         firstEmptyRow = currentState.first_empty_row(col)
+        # if the position is valid
         if firstEmptyRow != -1:
             warning.delete(0.0, END)
             if board[hintRow][hintCol]["image"] == hinttk:
                 board[hintRow][hintCol]["image"] = tkImg
             # should check for the right cell col only not row
             row = firstEmptyRow
+            #change the board and add player's move
             board[row][col]["image"] = playertk
             currentState.game_play(col)
             playerScoreTxt.delete(0.0, END)
+            #update the score
             compScore, pScore = currentState.calculate_score()
             playerScoreTxt.insert(END, str(pScore))
             turn = 1
-            # computer turn
-            global currentState
+            # computer's turn
             changeDepth()
-            maxEval, currentState = minimax(currentState, depth, True, True)
+            #call minimax
+            maxEval, currentState = minimax(currentState, depth, True)
             depth = 3
             r, c = currentState.get_index()
+            #add comp's move to the board
             board[r][c]["image"] = comptk
             compScoreTxt.delete(0.0, END)
+            #update the score
             compScore, pScore = currentState.calculate_score()
             compScoreTxt.insert(END, str(compScore))
             turn = 0
@@ -106,13 +113,20 @@ def play(col):
 def exitGame():
     window.destroy()
 
-def changeDepth():
+def changeDepth(): #update the required depth from the text box
     global depth
-    d = depthText.get()
+    d = depthText.get("1.0", END)
     if d != "":
         depth = int(depthText)
 
-
+def changePruning(): #enable or disable pruning
+    global pruning
+    if pruning:
+        pruning = False
+        pruningBtn["text"] = "Enable Pruning"
+    else:
+        pruning = True
+        pruningBtn["text"] = "Disable Pruning"
 # buttons and texts
 # scores
 lblPscore = Label(window, text="Player Score", bg="#d4c3e7", fg=color1, font="none 15 bold")
@@ -145,7 +159,11 @@ warning.grid(row=5, column=0, sticky=W)
 # exit btn
 exitBtn = Button(window, text="Exit Game", width=12, background="#2487fb", foreground="white", font="none 15 bold",
                  command=exitGame)
-exitBtn.grid(row=6, column=0, sticky=W)
+exitBtn.grid(row=7, column=0, sticky=W)
+#pruning button
+pruningBtn = Button(window, text="Enable Pruning", width=15, background="#2487fb", foreground="white",
+                  font="none 15 bold", command=changePruning)
+pruningBtn.grid(row=6, column=0, sticky=W)
 # board
 for i in range(1, 7):
     arr = []
