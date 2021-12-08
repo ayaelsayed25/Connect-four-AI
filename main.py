@@ -3,7 +3,8 @@ from tkinter import *
 from PIL import Image, ImageTk
 import networkx as nx
 import matplotlib.pyplot as plt
-
+from minimax import *
+from state import *
 # configure window
 window = Tk()
 window.title("Connect-four Game")
@@ -16,10 +17,10 @@ window.wm_attributes('-transparentcolor', 'green')
 # global vars
 color1 = "#2487fb"
 color2 = "grey"
-depth = 10
+depth = 3
 turn = 0  # 0 represents player turn and 1 represents commp turn
-currentState = 0
 board = []
+currentState = State("000000000000000000000000000000000000000000")
 # player color icon
 playerImg = Image.open('./images/pink.jpg')
 playertk = ImageTk.PhotoImage(playerImg)
@@ -61,44 +62,42 @@ def showHint():
     global turn
     if turn == 0:
         turn = 1
-        # state = getNextTurn()
-        global hintRow
-        global hintCol
-        # hintRow = state.row
-        # hintCol = state.col
-        hintRow = random.randint(0, 5)
-        hintCol = random.randint(0, 6)
+        changeDepth()
+        maxEval, state = minimax(currentState, depth, False, prune=True)
+        depth = 3
+        global hintRow, hintCol
+        hintRow, hintCol = state.get_index()
         # highlight this cell for hint
         board[hintRow][hintCol]["image"] = hinttk
         turn = 0
 
 
 def play(col):
-    global turn
+    global turn, depth
     if turn == 0:
-        # hint disappears
-        # if currentState.isValid(row, col):
-        if True:
+        firstEmptyRow = currentState.first_empty_row(col)
+        if firstEmptyRow != -1:
             warning.delete(0.0, END)
             if board[hintRow][hintCol]["image"] == hinttk:
                 board[hintRow][hintCol]["image"] = tkImg
             # should check for the right cell col only not row
-            # row = currentState.getFirstValid(col)
+            row = firstEmptyRow
             board[row][col]["image"] = playertk
-            # currentState.nextPlayerTurn(row, col)
+            currentState.game_play(col)
             playerScoreTxt.delete(0.0, END)
-            # playerScoreTxt.insert(END, str(currentState.playerScore))
+            compScore, pScore = currentState.calculate_score()
+            playerScoreTxt.insert(END, str(pScore))
             turn = 1
             # computer turn
-            # state = getNextTurn()
-            # row = state.row
-            # col = state.col
-            r = random.randint(0, 5)
-            c = random.randint(0, 6)
+            global currentState
+            changeDepth()
+            maxEval, currentState = minimax(currentState, depth, True, True)
+            depth = 3
+            r, c = currentState.get_index()
             board[r][c]["image"] = comptk
-            # currentState.nextPlayerTurn(row, col)
             compScoreTxt.delete(0.0, END)
-            # compScoreTxt.insert(END, str(currentState.compScore))
+            compScore, pScore = currentState.calculate_score()
+            compScoreTxt.insert(END, str(compScore))
             turn = 0
         else:
             warning.insert(END, "Wrong Play")
@@ -106,6 +105,12 @@ def play(col):
 
 def exitGame():
     window.destroy()
+
+def changeDepth():
+    global depth
+    d = depthText.get()
+    if d != "":
+        depth = int(depthText)
 
 
 # buttons and texts
