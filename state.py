@@ -1,12 +1,17 @@
 from indexing import *
 
+computer_score = 0
+human_score = 0
 
+
+# TODO Think again
 def calculate_score(computer, human, distance):
+    global computer_score, human_score
     if human == 0:
-        computer_score = pow(10, computer) - distance
+        computer_score += pow(10, computer) - distance * pow(10, computer) // board_height
         return computer_score, 0
     elif computer == 0:
-        human_score = pow(10, human) - distance
+        human_score += pow(10, human) - distance * pow(10, human) // board_height
         return 0, human_score
 
 
@@ -17,27 +22,20 @@ class State:
         self.board = board
 
     def heuristic(self):
-        computer_score = 0
-        human_score = 0
+        global computer_score, human_score
+        computer_score, human_score = 0, 0
         # horizontally
         for i in range(0, board_height):
-            scores = self.connect_four(self, i, right)
-            computer_score += scores[0]
-            human_score += scores[1]
+            self.connect_four(i, right)
         # vertically
         for i in range(0, board_width):
-            scores = self.connect_four(self, i, up)
-            computer_score += scores[0]
-            human_score += scores[1]
+            self.connect_four(i, up)
         #  Diagonally
-        for i in range(0, board_height / 2):
-            scores = self.connect_four(self, i, up_right)
-            computer_score += scores[0]
-            human_score += scores[1]
-        for i in range(0, board_width / 2 * board_height, board_height):
-            scores = self.connect_four(self, i, up_right)
-            computer_score += scores[0]
-            human_score += scores[1]
+        for i in range(0, board_height - 3):
+            self.connect_four(i, up_right)
+        for i in range(0, (board_width - 3) * board_height, board_height):
+            self.connect_four(i, up_right)
+        return computer_score - human_score
 
     # def horizontal_count(self,start):
     def calculate_distance(self, index):
@@ -63,4 +61,4 @@ class State:
                     distance += self.calculate_distance(index)
                 index = direction(index)
             temp = direction(temp)
-        return calculate_score(computer, human, distance)
+            calculate_score(computer, human, distance)
