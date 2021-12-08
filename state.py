@@ -14,6 +14,9 @@ class State:
     def game_play(self, column):
         self.board[self.first_empty_index(column)] = '2'
 
+    def get_index(self):
+        return self.player_move % board_height, self.player_move // board_height
+
     # TODO Think again
     def calculate_score_heuristic(self, computer, human, distance):
         if human == 0:
