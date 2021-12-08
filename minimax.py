@@ -7,7 +7,7 @@ def is_game_over(board):
     return '0' not in board
 
 
-def minimax(state, k, maximizing):
+def minimax(state, k, maximizing, prune=False, alpha=math.inf, beta=math.inf):
     if k == 0 or is_game_over(state.board):
         heuristic = state.heuristic()
         minimax_expansion[state] = heuristic
