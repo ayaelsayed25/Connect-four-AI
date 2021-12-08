@@ -1,6 +1,25 @@
 from indexing import *
 
 
+# Method to visit all Fours in the board Horizontally, Vertically, and Diagonally
+def board_visitor(visitor):
+    # horizontally
+    for i in range(board_height - 1, -1, -1):
+        visitor(i, right)
+    # vertically
+    for i in range(board_height - 1, board_width*board_height, board_height):
+        visitor(i, up)
+    # Diagonally
+    for i in range(board_height - 2, board_height - 4, -1):
+        visitor(i, up_right)
+    for i in range(board_height - 1, (board_width - 2)*board_height, board_height):
+        visitor(i, up_right)
+    for i in range(board_height*board_width - 2, board_height*board_width - 4, -1):
+        visitor(i, up_left)
+    for i in range(board_height*board_width - 1, (board_width - 4)*board_height - 1, -board_height):
+        visitor(i, up_left)
+
+
 class State:
     board = ""
     computer_heuristic_score = 0
@@ -13,11 +32,14 @@ class State:
         self.board = board
         self.player_move = player_move
 
+    # Add Human play to the current board
     def game_play(self, column):
-        self.board = self.board[:self.first_empty_index(column)] + '2' + self.board[self.first_empty_index(column)+1:]
+        index = self.first_empty_index(column)
+        self.board = self.board[:index] + '2' + self.board[index+1:]
 
+    # Get Index of computer play
     def get_index(self):
-        return self.player_move % board_height, self.player_move // board_height
+        return get_row(self.player_move), get_column(self.player_move)
 
     # TODO Think again
     def calculate_score_heuristic(self, computer, human, distance):
@@ -26,25 +48,27 @@ class State:
         elif computer == 0:
             self.human_heuristic_score += pow(10, human) - distance * pow(10, human) // board_height
 
+    # Get First empty index in the Board string in specific row
     def first_empty_index(self, column):
-        column_index = column*board_height
-        empty_index = column_index
-        for j in range(column_index, column_index + board_height):
+        empty_index = column = column*board_height + board_height - 1
+        for j in range(column, column - board_height, -1):
             if self.board[empty_index] != '0':
-                empty_index += 1
+                empty_index -= 1
             else:
                 break
-        if empty_index == column_index + board_height:
+        if empty_index == column - board_height:
             return -1
         return empty_index
 
+    # Get first empty row in the column
     def first_empty_row(self, column):
         index = self.first_empty_index(column)
-        return index % board_height
+        return get_row(index)
 
     def construct_next_states(self, computer_turn):
         states = []
         for i in range(0, board_width):
+            # Get All possible plays for the computer and its states
             empty_index = self.first_empty_index(i)
             if empty_index != -1:
                 board = self.board
@@ -57,10 +81,12 @@ class State:
                 states.append(None)
         return states
 
+    # Get State Heuristic score. Used in minimax algorithm
     def heuristic(self):
-        self.board_visitor(self.connect_four)
+        board_visitor(self.connect_four)
         return self.computer_heuristic_score - self.human_heuristic_score
 
+    # Calculate distance between the required squares to connect four and the last filled square in the column
     def calculate_distance(self, index):
         distance = 0
         while index != -1 and self.board[index] == '0':
@@ -100,24 +126,12 @@ class State:
                     human += 1
                 index = direction(index)
             temp = direction(temp)
-            if human == 0 and computer == 4:
+            if computer == 4:
                 self.computer_score += 1
-            elif human == 4 and computer == 0:
+            elif human == 4:
                 self.human_score += 1
 
     def calculate_score(self):
-        self.board_visitor(self.count_fours)
+        self.computer_score = self.human_score = 0
+        board_visitor(self.count_fours)
         return self.computer_score, self.human_score
-
-    def board_visitor(self, visitor):
-        # horizontally
-        for i in range(0, board_height):
-            visitor(i, right)
-        # vertically
-        for i in range(0, board_width):
-            visitor(i, up)
-        #  Diagonally
-        for i in range(0, board_height - 3):
-            visitor(i, up_right)
-        for i in range(0, (board_width - 3) * board_height, board_height):
-            visitor(i, up_right)

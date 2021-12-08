@@ -75,7 +75,7 @@ def showHint():
 
 def play(col):
     global turn, depth, currentState, pruning
-    #human's turn
+    # human's turn
     if turn == 0:
         firstEmptyRow = currentState.first_empty_row(col)
         print(firstEmptyRow)
@@ -86,10 +86,10 @@ def play(col):
                 board[hintRow][hintCol]["image"] = tkImg
             # should check for the right cell col only not row
             # change the board and add player's move
-            # row = firstEmptyRow
-            row = board_height - firstEmptyRow - 1
+            row = firstEmptyRow
             board[row][col]["image"] = playertk
             print(currentState.board)
+            print(currentState.player_move)
             currentState.game_play(col)
             playerScoreTxt.delete(0.0, END)
             # update the score
@@ -101,11 +101,10 @@ def play(col):
             # call minimax
             maxEval, currentState = minimax(currentState, depth, True, pruning)
             print(currentState.board)
+            print(currentState.player_move)
             depth = 3
             r, c = currentState.get_index()
-            r = board_height - r - 1
-            c = board_width - c - 1
-            #add comp's move to the board
+            # add comp's move to the board
             board[r][c]["image"] = comptk
             compScoreTxt.delete(0.0, END)
             # update the score
@@ -178,7 +177,7 @@ pruningBtn.grid(row=6, column=0, sticky=W)
 for i in range(1, 7):
     arr = []
     for j in range(2, 9):
-        btn = Button(window, image=tkImg, width=125, height=125, background="#f5f3f3",
+        btn = Button(window, image=tkImg, width=100, height=110, background="#f5f3f3",
                      command=lambda col=j - 2: play(col), border=2)
         btn.grid(row=i, column=j)
         arr.append(btn)

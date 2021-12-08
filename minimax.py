@@ -17,6 +17,9 @@ def minimax(state, k, maximizing, prune=False, alpha=-math.inf, beta=math.inf):
         max_eval = -math.inf
         max_state = None
         children = state.construct_next_states(True)
+        # TODO Tree expansion
+        for child in children:
+            minimax_expansion[child] = max_state
         for child in children:
             if child is not None:
                 temp, _ = minimax(child, k - 1, False, prune, alpha, beta)
