@@ -50,5 +50,4 @@ def right(index):
     return index + board_height
 
 
-def get_index(i, j):
-    return i + j * board_height
+
