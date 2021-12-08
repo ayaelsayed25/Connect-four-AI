@@ -60,11 +60,11 @@ def showGraph():
 
 
 def showHint():
-    global turn, depth
+    global turn, depth, pruning
     if turn == 0:
         turn = 1
         changeDepth()
-        maxEval, state = minimax(currentState, depth, False)
+        maxEval, state = minimax(currentState, depth, False, pruning)
         depth = 3
         global hintRow, hintCol
         hintRow, hintCol = state.get_index()
@@ -74,7 +74,7 @@ def showHint():
 
 
 def play(col):
-    global turn, depth, currentState
+    global turn, depth, currentState, pruning
     if turn == 0:
         firstEmptyRow = currentState.first_empty_row(col)
         # if the position is valid
@@ -95,7 +95,7 @@ def play(col):
             # computer's turn
             changeDepth()
             #call minimax
-            maxEval, currentState = minimax(currentState, depth, True)
+            maxEval, currentState = minimax(currentState, depth, True, pruning)
             depth = 3
             r, c = currentState.get_index()
             #add comp's move to the board
@@ -116,7 +116,7 @@ def changeDepth(): #update the required depth from the text box
     global depth
     d = depthText.get("1.0", END)
     if d != "":
-        depth = int(depthText)
+        depth = int(d)
 
 def changePruning(): #enable or disable pruning
     global pruning
