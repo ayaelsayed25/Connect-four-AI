@@ -31,6 +31,8 @@ class State:
         for j in range(column, column + board_height):
             if self.board[empty_index] != '0':
                 empty_index += 1
+            else:
+                break
         if empty_index == column + board_height:
             return -1
         return empty_index
@@ -52,6 +54,7 @@ class State:
                 states.append(State(board, empty_index))
             else:
                 states.append(None)
+        return states
 
     def heuristic(self):
         self.board_visitor(self.connect_four)
@@ -65,7 +68,7 @@ class State:
         return distance
 
     def connect_four(self, i, direction):
-        temp, index = i
+        temp = index = i
         while index != -1:
             index = temp
             human = 0
@@ -83,7 +86,8 @@ class State:
             self.calculate_score_heuristic(computer, human, distance)
 
     def count_fours(self, i, direction):
-        temp, index = i
+        temp = i
+        index = temp
         while index != -1:
             index = temp
             human = 0

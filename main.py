@@ -12,7 +12,7 @@ backgroundImg = ImageTk.PhotoImage(bck)
 background_label = Label(window, image=backgroundImg)
 background_label.place(x=0, y=0, relwidth=1, relheight=1)
 window.attributes("-fullscreen", True)
-window.wm_attributes('-transparentcolor', 'green')
+# window.wm_attributes('-alpha', 'green')
 # global vars
 color1 = "#2487fb"
 color2 = "grey"
@@ -77,15 +77,17 @@ def play(col):
     global turn, depth, currentState, pruning
     if turn == 0:
         firstEmptyRow = currentState.first_empty_row(col)
+        print(firstEmptyRow)
         # if the position is valid
         if firstEmptyRow != -1:
             warning.delete(0.0, END)
             if board[hintRow][hintCol]["image"] == hinttk:
                 board[hintRow][hintCol]["image"] = tkImg
             # should check for the right cell col only not row
-            row = firstEmptyRow
+            row = board_height - firstEmptyRow - 1
             #change the board and add player's move
             board[row][col]["image"] = playertk
+            print(currentState.board)
             currentState.game_play(col)
             playerScoreTxt.delete(0.0, END)
             #update the score
@@ -96,8 +98,11 @@ def play(col):
             changeDepth()
             #call minimax
             maxEval, currentState = minimax(currentState, depth, True, pruning)
+            print(currentState.board)
             depth = 3
             r, c = currentState.get_index()
+            r = board_height - r - 1
+            c = board_width - c - 1
             #add comp's move to the board
             board[r][c]["image"] = comptk
             compScoreTxt.delete(0.0, END)

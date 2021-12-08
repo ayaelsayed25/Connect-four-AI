@@ -16,7 +16,8 @@ def minimax(state, k, maximizing, prune=False, alpha=-math.inf, beta=math.inf):
     if maximizing:
         max_eval = -math.inf
         max_state = None
-        children = state.construct_next_states(False)
+        children = state.construct_next_states(True)
+        print(children)
         for child in children:
             if child is not None:
                 temp, _ = minimax(child, k - 1, False, prune, alpha, beta)
@@ -32,7 +33,7 @@ def minimax(state, k, maximizing, prune=False, alpha=-math.inf, beta=math.inf):
     else:
         min_eval = math.inf
         min_state = None
-        children = state.construct_next_states(True)
+        children = state.construct_next_states(False)
         for child in children:
             if child is not None:
                 temp, _ = minimax(child, k - 1, True, prune, alpha, beta)
