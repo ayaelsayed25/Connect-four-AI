@@ -1,29 +1,47 @@
 from indexing import *
 
-computer_score = 0
-human_score = 0
-
-
-# TODO Think again
-def calculate_score(computer, human, distance):
-    global computer_score, human_score
-    if human == 0:
-        computer_score += pow(10, computer) - distance * pow(10, computer) // board_height
-        return computer_score, 0
-    elif computer == 0:
-        human_score += pow(10, human) - distance * pow(10, human) // board_height
-        return 0, human_score
-
 
 class State:
     board = ""
+    computer_score = 0
+    human_score = 0
+    player_move = -1
 
-    def __init__(self, board):
+    def __init__(self, board, player_move):
         self.board = board
+        self.player_move = player_move
+
+    # TODO Think again
+    def calculate_score_heuristic(self, computer, human, distance):
+        if human == 0:
+            self.computer_score += pow(10, computer) - distance * pow(10, computer) // board_height
+        elif computer == 0:
+            self.human_score += pow(10, human) - distance * pow(10, human) // board_height
+
+    def first_empty_index(self, column):
+        empty_index = column
+        for j in range(column, column + board_height):
+            if self.board[empty_index] != '0':
+                empty_index += 1
+        if empty_index == column + board_height:
+            return -1
+        return empty_index
+
+    def construct_next_states(self, computer_turn):
+        states = []
+        for i in range(0, board_width * board_height, board_height):
+            empty_index = self.first_empty_index(i)
+            if empty_index != -1:
+                board = self.board
+                if computer_turn:
+                    board[empty_index] = '1'
+                else:
+                    board[empty_index] = '2'
+                states.append(State(board, empty_index))
+            else:
+                states.append(None)
 
     def heuristic(self):
-        global computer_score, human_score
-        computer_score, human_score = 0, 0
         # horizontally
         for i in range(0, board_height):
             self.connect_four(i, right)
@@ -35,7 +53,7 @@ class State:
             self.connect_four(i, up_right)
         for i in range(0, (board_width - 3) * board_height, board_height):
             self.connect_four(i, up_right)
-        return computer_score - human_score
+        return self.computer_score - self.human_score
 
     # def horizontal_count(self,start):
     def calculate_distance(self, index):
@@ -61,4 +79,20 @@ class State:
                     distance += self.calculate_distance(index)
                 index = direction(index)
             temp = direction(temp)
-            calculate_score(computer, human, distance)
+            self.calculate_score_heuristic(computer, human, distance)
+
+    # def count_fours(self):
+
+    # def calculate_score(self,computer_turn):
+    #     # horizontally
+    #     for i in range(0, board_height):
+    #         self.connect_four(i, right)
+    #     # vertically
+    #     for i in range(0, board_width):
+    #         self.connect_four(i, up)
+    #     #  Diagonally
+    #     for i in range(0, board_height - 3):
+    #         self.connect_four(i, up_right)
+    #     for i in range(0, (board_width - 3) * board_height, board_height):
+    #         self.connect_four(i, up_right)
+    #     return self.computer_score - self.human_score
