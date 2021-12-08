@@ -27,13 +27,14 @@ class State:
             self.human_heuristic_score += pow(10, human) - distance * pow(10, human) // board_height
 
     def first_empty_index(self, column):
-        empty_index = column
-        for j in range(column, column + board_height):
+        column_index = column*board_height
+        empty_index = column_index
+        for j in range(column_index, column_index + board_height):
             if self.board[empty_index] != '0':
                 empty_index += 1
             else:
                 break
-        if empty_index == column + board_height:
+        if empty_index == column_index + board_height:
             return -1
         return empty_index
 
@@ -43,7 +44,7 @@ class State:
 
     def construct_next_states(self, computer_turn):
         states = []
-        for i in range(0, board_width * board_height, board_height):
+        for i in range(0, board_width):
             empty_index = self.first_empty_index(i)
             if empty_index != -1:
                 board = self.board
