@@ -39,6 +39,26 @@ class State:
                 scores = calculate_score(computer, human, distance)
                 computer_score += scores[0]
                 human_score += scores[1]
+        # vertically
+        for i in range(0, board_width):
+            temp, index = i
+            while index != -1:
+                index = temp
+                human = 0
+                computer = 0
+                distance = 0
+                for _ in range(0, 4):
+                    if self.board[index] == '1':
+                        computer += 1
+                    elif self.board[index] == '2':
+                        human += 1
+                    else:
+                        distance += self.calculate_distance(index)
+                    index = up(index)
+                temp = up(temp)
+                scores = calculate_score(computer, human, distance)
+                computer_score += scores[0]
+                human_score += scores[1]
 
     # def horizontal_count(self,start):
     def calculate_distance(self, index):
