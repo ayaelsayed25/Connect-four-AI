@@ -1,4 +1,3 @@
-import random
 from tkinter import *
 from PIL import Image, ImageTk
 import networkx as nx
@@ -59,8 +58,9 @@ def showGraph():
     plt.show()
 
 
-def showHint(): #Tell the players which game is the best for them
-    global turn
+
+def showHint():
+    global turn, depth
     if turn == 0:
         turn = 1
         changeDepth()
@@ -75,7 +75,6 @@ def showHint(): #Tell the players which game is the best for them
 
 def play(col):
     global turn, depth, currentState
-    #if it's the player turn
     if turn == 0:
         firstEmptyRow = currentState.first_empty_row(col)
         # if the position is valid
