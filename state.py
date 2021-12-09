@@ -53,9 +53,11 @@ class State:
     # TODO Think again
     def calculate_score_heuristic(self, computer, human, distance):
         if human == 0:
-            self.computer_heuristic_score += pow(10, computer + 1) - distance * pow(10, computer + 1) // board_height
+            self.computer_heuristic_score += pow(10, computer + 1) - distance * pow(10, computer + 1) // (board_height
+                                                                                                          * board_width)
         elif computer == 0:
-            self.human_heuristic_score += pow(10, human + 1) - distance * pow(10, human + 1) // board_height
+            self.human_heuristic_score += pow(10, human + 1) - distance * pow(10, human + 1) // (board_height
+                                                                                                 * board_width)
         # if self.board[self.player_move] == '1':
         #     self.computer_heuristic_score += position_matrix[self.player_move]
         # else:

@@ -102,7 +102,7 @@ def showGraph():
                              mode='markers',
                              name='bla',
                              marker=dict(symbol='circle-dot',
-                                         size=30,
+                                         size=50,
                                          color='#DB4551',  # '#DB4551',
                                          line=dict(color='rgb(50,50,50)', width=1)
                                          ),
@@ -115,7 +115,7 @@ def showGraph():
                              mode='markers',
                              name='bla',
                              marker=dict(symbol='circle-dot',
-                                         size=30,
+                                         size=50,
                                          color="#00294F",  # '#DB4551',
                                          line=dict(color='rgb(50,50,50)', width=1)
                                          ),
@@ -130,7 +130,7 @@ def showGraph():
                 showticklabels=False,
                 )
 
-    fig.update_layout(title='Tree with Reingold-Tilford Layout',
+    fig.update_layout(title='Tree Expansion',
                       annotations=make_annotations(position, score_expansion),
                       font_size=12,
                       showlegend=False,
@@ -253,22 +253,22 @@ depthText.grid(row=3, column=1, sticky=W)
 # show graph button
 graphBtn = Button(window, text="Show State Graph", width=15, background="#2487fb", foreground="white",
                   font="none 15 bold", command=showGraph)
-graphBtn.grid(row=4, column=0, sticky=W, padx=0)
+graphBtn.grid(row=4, column=0, sticky=W, padx=50)
 # hint button
 hintBtn = Button(window, text="Show Hint", width=15, background="#2487fb", foreground="white", font="none 15 bold",
                  command=showHint)
-hintBtn.grid(row=5, column=0, sticky=W, padx=0)
+hintBtn.grid(row=5, column=0, sticky=W, padx=50)
 # exit btn
 exitBtn = Button(window, text="Exit Game", width=15, background="#2487fb", foreground="white", font="none 15 bold",
                  command=exitGame)
-exitBtn.grid(row=6, column=0, sticky=W, padx=0)
+exitBtn.grid(row=6, column=0, sticky=W, padx=50)
 # pruning button
 pruningBtn = Button(window, text="Enable Pruning", width=15, background="#2487fb", foreground="white",
                     font="none 15 bold", command=changePruning)
-pruningBtn.grid(row=7, column=0, sticky=W, padx=0)
+pruningBtn.grid(row=7, column=0, sticky=W, padx=50)
 # warning
 warning = Text(window, width=20, height=2, foreground="black", background="#d4c3e7", borderwidth=0, font="none 15 bold")
-warning.grid(row=8, column=0, sticky=W, padx=0)
+warning.grid(row=8, column=0, sticky=W, padx=50)
 # board
 for i in range(2, 8):
     arr = []

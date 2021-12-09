@@ -2,24 +2,40 @@ import math
 from state import *
 
 minimax_expansion = []
+board_expansion = []
+score_expansion = []
+length = 0
+
+
+def fill_gaps(i):
+    for j in range(1, 8):
+        f = 7 * i + j
+        if f >= length:
+            return
+        board_expansion[7 * i + j] = "0"
+        fill_gaps(f)
 
 
 def minimax_play(current_state, k, maximizing, prune=False):
-    global minimax_expansion
+    global minimax_expansion, board_expansion, score_expansion, length
+    length = 0
     minimax_expansion = [dict() for _ in range(k + 1)]
     max_eval, next_state = minimax(current_state, k, maximizing, prune)
-    length = 0
-    for level in minimax_expansion:
-        length += len(level)
+
+    for level in range(0, k + 1):
+        length += pow(7, level)
     board_expansion = ["None" for _ in range(length)]
     score_expansion = [-math.inf for _ in range(length)]
     minimax_expansion[k][current_state] = max_eval
     i = 0
     for j in range(k, -1, -1):
         for state, heuristic in minimax_expansion[j].items():
-            if state.board != "":
+            if state.board != "" and board_expansion[i] != "0":
                 board_expansion[i] = state.board
                 score_expansion[i] = heuristic
+            elif state.board == "":
+                fill_gaps(i)
+
             i += 1
     return max_eval, next_state, board_expansion, score_expansion
 
