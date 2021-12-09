@@ -17,7 +17,7 @@ def board_visitor(visitor):
 
     for i in range(board_height*board_width - 2, board_height*board_width - 4, -1):
         visitor(i, up_left)
-    for i in range(board_height*board_width - 1, (board_width - 4)*board_height - 1, -board_height):
+    for i in range(board_height*board_width - 1, (board_width - 2)*board_height, -board_height):
         visitor(i, up_left)
 
 
@@ -57,13 +57,16 @@ class State:
                 empty_index -= 1
             else:
                 break
-        if empty_index == column - board_height - 1:
+        if empty_index == column - board_height:
             return -1
         return empty_index
 
     # Get first empty row in the column
     def first_empty_row(self, column):
         index = self.first_empty_index(column)
+        print(index == -1)
+        if index == -1 :
+            return -1
         return get_row(index)
 
     def construct_next_states(self, computer_turn):

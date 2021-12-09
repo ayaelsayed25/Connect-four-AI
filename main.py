@@ -159,8 +159,8 @@ def play(col):
     global turn, depth, currentState, pruning,board_expansion, score_expansion
     # human's turn
     if turn == 0:
-        print(col)
-        print(currentState.board)
+        # print(col)
+        # print(currentState.board)
         firstEmptyRow = currentState.first_empty_row(col)
         print(firstEmptyRow)
         # if the position is valid
