@@ -245,7 +245,7 @@ compScoreTxt = Text(window, width=15, height=3, foreground="#4d5054", background
 compScoreTxt.grid(row=2, column=1, sticky=W)
 compScoreTxt.insert(END, "0")
 # depth
-Label(window, text="Depth:", bg="#d4c3e7", fg="#4d5054", font="none 15 bold").grid(row=3, column=0, sticky=W, padx=20)
+Label(window, text="Depth:", bg="#d4c3e7", fg="#4d5054", font="none 15 bold").grid(row=3, column=0, sticky=W)
 depthText = Text(window, width=8, height=1, foreground="black", background="white", borderwidth=0, font="none 15 bold")
 depthText.grid(row=3, column=1, sticky=W)
 # show graph button
@@ -276,6 +276,20 @@ for i in range(2, 8):
         btn.grid(row=i, column=j)
         arr.append(btn)
     board.append(arr)
-
+turn = 1
+# computer's turn
+changeDepth()
+# call minimax
+maxEval, currentState, board_expansion, score_expansion = minimax_play(currentState, depth, True, pruning)
+depth = 3
+r, c = currentState.get_index()
+# add comp's move to the board
+board[r][c]["image"] = comptk
+compScoreTxt.delete("1.0", END)
+# update the score
+compScore, pScore = currentState.calculate_score()
+compScoreTxt.insert(END, str(compScore))
+window.update()
+turn = 0
 # window loop
 window.mainloop()
