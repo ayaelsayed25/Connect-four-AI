@@ -53,6 +53,8 @@ def showGraph():
     #                78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100
     #                ]
     nr_vertices = len(score_expansion)
+    print(score_expansion)
+    print(board_expansion)
     G = Graph.Tree(nr_vertices, 7)  # 2 stands for children number
     lay = G.layout('tree')
 
@@ -104,7 +106,7 @@ def showGraph():
                                          color='#DB4551',  # '#DB4551',
                                          line=dict(color='rgb(50,50,50)', width=1)
                                          ),
-                             text=board_expansion,
+                             text=board_expansion[0:1],
                              hoverinfo='text',
                              opacity=0.8
                              ))
@@ -117,7 +119,7 @@ def showGraph():
                                          color="#00294F",  # '#DB4551',
                                          line=dict(color='rgb(50,50,50)', width=1)
                                          ),
-                             text=board_expansion,
+                             text=board_expansion[1:],
                              hoverinfo='text',
                              opacity=0.8
                              ))
