@@ -100,7 +100,7 @@ def showGraph():
                              mode='markers',
                              name='bla',
                              marker=dict(symbol='circle-dot',
-                                         size=18,
+                                         size=30,
                                          color='#DB4551',  # '#DB4551',
                                          line=dict(color='rgb(50,50,50)', width=1)
                                          ),
@@ -113,7 +113,7 @@ def showGraph():
                              mode='markers',
                              name='bla',
                              marker=dict(symbol='circle-dot',
-                                         size=18,
+                                         size=30,
                                          color="#00294F",  # '#DB4551',
                                          line=dict(color='rgb(50,50,50)', width=1)
                                          ),
