@@ -64,7 +64,7 @@ def showHint():
     if turn == 0:
         turn = 1
         changeDepth()
-        maxEval, state = minimax_play(currentState, depth, False, pruning)
+        maxEval, state = minimax(currentState, depth, False, pruning)
         depth = 3
         global hintRow, hintCol
         hintRow, hintCol = state.get_index()
@@ -98,7 +98,7 @@ def play(col):
             # computer's turn
             changeDepth()
             # call minimax
-            maxEval, currentState = minimax_play(currentState, depth, True, pruning)
+            maxEval, currentState,board_expansion,score_expansion = minimax_play(currentState, depth, True, pruning)
 
             # print(currentState.board)
             # print(currentState.player_move)

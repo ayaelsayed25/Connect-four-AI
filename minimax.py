@@ -9,12 +9,13 @@ def minimax_play(current_state, k, maximizing, prune=False):
     max_eval, next_state = minimax(current_state, k, maximizing, prune)
     minimax_expansion.popitem()
     board_expansion = ["" for _ in range(len(minimax_expansion))]
-    score_expansion = [0 for _ in range(len(minimax_expansion))]
+    score_expansion = [-math.inf for _ in range(len(minimax_expansion))]
     i = 0
     minimax_expansion[current_state] = max_eval
     for s, heuristic in minimax_expansion.items():
-        board_expansion[i] = s.board
-        score_expansion[i] = heuristic
+        if s is not None:
+            board_expansion[i] = s.board
+            score_expansion[i] = heuristic
         i += 1
     return max_eval, next_state, board_expansion, score_expansion
 
@@ -68,7 +69,7 @@ def minimax(state, k, maximizing, prune=False, alpha=-math.inf, beta=math.inf):
 
 
 mama = "000000000000000000000000000000000000000000"
-minimax_play(State("000011000002000000000000000000000000000000"), 2)
+minimax_play(State("000011000002000000000000000000000000000000"), 2, True)
 # print(minimax(State("000011000002000000000000000000000000000000"), 2, True))
 i = 0
 j = 0
