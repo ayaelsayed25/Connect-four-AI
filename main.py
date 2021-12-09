@@ -53,6 +53,8 @@ def showGraph():
     #                78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100
     #                ]
     nr_vertices = len(score_expansion)
+    print(score_expansion)
+    print(board_expansion)
     G = Graph.Tree(nr_vertices, 7)  # 2 stands for children number
     lay = G.layout('tree')
 
@@ -104,7 +106,7 @@ def showGraph():
                                          color='#DB4551',  # '#DB4551',
                                          line=dict(color='rgb(50,50,50)', width=1)
                                          ),
-                             text=board_expansion,
+                             text=board_expansion[0:1],
                              hoverinfo='text',
                              opacity=0.8
                              ))
@@ -117,7 +119,7 @@ def showGraph():
                                          color="#00294F",  # '#DB4551',
                                          line=dict(color='rgb(50,50,50)', width=1)
                                          ),
-                             text=board_expansion,
+                             text=board_expansion[1:],
                              hoverinfo='text',
                              opacity=0.8
                              ))
@@ -156,7 +158,7 @@ def showHint():
 
 
 def play(col):
-    global turn, depth, currentState, pruning,board_expansion, score_expansion
+    global turn, depth, currentState, pruning,board_expansion, score_expansion, hintRow, hintCol
     # human's turn
     if turn == 0:
         # print(col)
@@ -166,11 +168,17 @@ def play(col):
         # if the position is valid
         if firstEmptyRow != -1:
             warning.delete("1.0", END)
-            if board[hintRow][hintCol]["image"] == hinttk:
+            row = firstEmptyRow
+            if board[row][col]["image"] == hinttk:
+                board[hintRow][hintCol]["image"] = playertk
+                hintRow = None
+                hintCol = None
+            elif hintCol != None and hintRow != None:
                 board[hintRow][hintCol]["image"] = tkImg
+                hintRow = None
+                hintCol = None
             # should check for the right cell col only not row
             # change the board and add player's move
-            row = firstEmptyRow
             board[row][col]["image"] = playertk
             window.update()
             # print(currentState.board)
@@ -180,6 +188,7 @@ def play(col):
             # update the score
             compScore, pScore = currentState.calculate_score()
             playerScoreTxt.insert(END, str(pScore))
+            window.update()
             turn = 1
             # computer's turn
             changeDepth()
@@ -196,6 +205,7 @@ def play(col):
             # update the score
             compScore, pScore = currentState.calculate_score()
             compScoreTxt.insert(END, str(compScore))
+            window.update()
             turn = 0
         else:
             warning.insert(END, "Wrong Play")
@@ -237,7 +247,7 @@ compScoreTxt = Text(window, width=15, height=3, foreground="#4d5054", background
 compScoreTxt.grid(row=2, column=1, sticky=W)
 compScoreTxt.insert(END, "0")
 # depth
-Label(window, text="Depth:", bg="#d4c3e7", fg="#4d5054", font="none 15 bold").grid(row=3, column=0, sticky=W, padx=20)
+Label(window, text="Depth:", bg="#d4c3e7", fg="#4d5054", font="none 15 bold").grid(row=3, column=0, sticky=W)
 depthText = Text(window, width=8, height=1, foreground="black", background="white", borderwidth=0, font="none 15 bold")
 depthText.grid(row=3, column=1, sticky=W)
 # show graph button
@@ -268,6 +278,20 @@ for i in range(2, 8):
         btn.grid(row=i, column=j)
         arr.append(btn)
     board.append(arr)
-
+turn = 1
+# computer's turn
+changeDepth()
+# call minimax
+maxEval, currentState, board_expansion, score_expansion = minimax_play(currentState, depth, True, pruning)
+depth = 3
+r, c = currentState.get_index()
+# add comp's move to the board
+board[r][c]["image"] = comptk
+compScoreTxt.delete("1.0", END)
+# update the score
+compScore, pScore = currentState.calculate_score()
+compScoreTxt.insert(END, str(compScore))
+window.update()
+turn = 0
 # window loop
 window.mainloop()
