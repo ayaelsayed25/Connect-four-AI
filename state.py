@@ -1,5 +1,13 @@
 from indexing import *
 
+# position_matrix = [30, 40, 50, 50, 50, 40, 30,
+#                    40, 60, 80, 80, 60, 40,
+#                    50, 80, 110, 110, 80, 50,
+#                    70, 100, 130, 130, 100, 70,
+#                    50, 80, 110, 110, 80, 50,
+#                    40, 60, 80, 80, 60, 40,
+#                    30, 40, 50, 50, 40, 30]
+
 
 # Method to visit all Fours in the board Horizontally, Vertically, and Diagonally
 def board_visitor(visitor):
@@ -45,9 +53,13 @@ class State:
     # TODO Think again
     def calculate_score_heuristic(self, computer, human, distance):
         if human == 0:
-            self.computer_heuristic_score += pow(10, computer) - distance * pow(10, computer) // 3
+            self.computer_heuristic_score += pow(10, computer + 1) - distance * pow(10, computer + 1) // board_height
         elif computer == 0:
-            self.human_heuristic_score += pow(10, human) - distance * pow(10, human) // board_height
+            self.human_heuristic_score += pow(10, human + 1) - distance * pow(10, human + 1) // board_height
+        # if self.board[self.player_move] == '1':
+        #     self.computer_heuristic_score += position_matrix[self.player_move]
+        # else:
+        #     self.human_heuristic_score += position_matrix[self.player_move]
 
     # Get First empty index in the Board string in specific row
     def first_empty_index(self, column):
@@ -88,7 +100,7 @@ class State:
     # Get State Heuristic score. Used in minimax algorithm
     def heuristic(self):
         board_visitor(self.connect_four)
-        return self.computer_heuristic_score - self.human_heuristic_score
+        return self.computer_heuristic_score - 1.25 * self.human_heuristic_score
 
     # Calculate distance between the required squares to connect four and the last filled square in the column
     def calculate_distance(self, index):
@@ -114,8 +126,8 @@ class State:
                     distance += self.calculate_distance(down(index))
                 index = direction(index)
             temp = direction(temp)
-            if distance < 3:
-                self.calculate_score_heuristic(computer, human, distance)
+            # if distance < 3:
+            self.calculate_score_heuristic(computer, human, distance)
 
     def count_fours(self, i, direction):
         temp = i
