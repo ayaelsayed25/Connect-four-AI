@@ -64,7 +64,7 @@ def showHint():
     if turn == 0:
         turn = 1
         changeDepth()
-        maxEval, state = minimax(currentState, depth, False, pruning)
+        maxEval, state = minimax_play(currentState, depth, False, pruning)
         depth = 3
         global hintRow, hintCol
         hintRow, hintCol = state.get_index()
@@ -78,7 +78,6 @@ def play(col):
     # human's turn
     if turn == 0:
         firstEmptyRow = currentState.first_empty_row(col)
-        print(firstEmptyRow)
         # if the position is valid
         if firstEmptyRow != -1:
             warning.delete(0.0, END)
@@ -88,8 +87,8 @@ def play(col):
             # change the board and add player's move
             row = firstEmptyRow
             board[row][col]["image"] = playertk
-            print(currentState.board)
-            print(currentState.player_move)
+            # print(currentState.board)
+            # print(currentState.player_move)
             currentState.game_play(col)
             playerScoreTxt.delete(0.0, END)
             # update the score
@@ -99,9 +98,10 @@ def play(col):
             # computer's turn
             changeDepth()
             # call minimax
-            maxEval, currentState = minimax(currentState, depth, True, pruning)
-            print(currentState.board)
-            print(currentState.player_move)
+            maxEval, currentState = minimax_play(currentState, depth, True, pruning)
+
+            # print(currentState.board)
+            # print(currentState.player_move)
             depth = 3
             r, c = currentState.get_index()
             # add comp's move to the board

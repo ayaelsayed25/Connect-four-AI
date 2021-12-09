@@ -12,8 +12,9 @@ def board_visitor(visitor):
     # Diagonally
     for i in range(board_height - 2, board_height - 4, -1):
         visitor(i, up_right)
-    for i in range(board_height - 1, (board_width - 2)*board_height, board_height):
+    for i in range(board_height - 1, (board_width - 2)*board_height-1, board_height):
         visitor(i, up_right)
+
     for i in range(board_height*board_width - 2, board_height*board_width - 4, -1):
         visitor(i, up_left)
     for i in range(board_height*board_width - 1, (board_width - 4)*board_height - 1, -board_height):
@@ -84,6 +85,8 @@ class State:
     # Get State Heuristic score. Used in minimax algorithm
     def heuristic(self):
         board_visitor(self.connect_four)
+        print(self.computer_heuristic_score)
+        print(self.human_heuristic_score)
         return self.computer_heuristic_score - self.human_heuristic_score
 
     # Calculate distance between the required squares to connect four and the last filled square in the column
@@ -107,10 +110,11 @@ class State:
                 elif self.board[index] == '2':
                     human += 1
                 else:
-                    distance += self.calculate_distance(index)
+                    distance += self.calculate_distance(down(index))
                 index = direction(index)
             temp = direction(temp)
-            self.calculate_score_heuristic(computer, human, distance)
+            if distance < 3:
+                self.calculate_score_heuristic(computer, human, distance)
 
     def count_fours(self, i, direction):
         temp = i
