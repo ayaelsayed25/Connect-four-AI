@@ -15,8 +15,6 @@ background_label.place(x=0, y=0, relwidth=1, relheight=1)
 window.attributes("-fullscreen", True)
 # window.wm_attributes('-transparentcolor', 'green')
 # global vars
-color1 = "#2487fb"
-color2 = "grey"
 depth = 3
 turn = 0  # 0 represents player turn and 1 represents commp turn
 board = []
@@ -41,15 +39,6 @@ hintCol = 0
 
 
 # functions
-def changeColor():  # swap colors between player and computer
-    global color1
-    global color2
-    color1, color2 = color2, color1
-    lblPscore["fg"] = color1
-    lblCscore["fg"] = color2
-    playerScoreTxt["foreground"] = color1
-    compScoreTxt["foreground"] = color2
-
 
 def showGraph():
     # minmaxGraph = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -176,7 +165,7 @@ def play(col):
         print(firstEmptyRow)
         # if the position is valid
         if firstEmptyRow != -1:
-            warning.delete(0.0, END)
+            warning.delete("1.0", END)
             if board[hintRow][hintCol]["image"] == hinttk:
                 board[hintRow][hintCol]["image"] = tkImg
             # should check for the right cell col only not row
@@ -187,7 +176,7 @@ def play(col):
             # print(currentState.board)
             # print(currentState.player_move)
             currentState.game_play(col)
-            playerScoreTxt.delete(0.0, END)
+            playerScoreTxt.delete("1.0", END)
             # update the score
             compScore, pScore = currentState.calculate_score()
             playerScoreTxt.insert(END, str(pScore))
@@ -203,7 +192,7 @@ def play(col):
             r, c = currentState.get_index()
             # add comp's move to the board
             board[r][c]["image"] = comptk
-            compScoreTxt.delete(0.0, END)
+            compScoreTxt.delete("1.0", END)
             # update the score
             compScore, pScore = currentState.calculate_score()
             compScoreTxt.insert(END, str(compScore))
@@ -235,46 +224,46 @@ def changePruning():  # enable or disable pruning
 
 # buttons and texts
 # scores
-lblPscore = Label(window, text="Player Score", bg="#d4c3e7", fg=color1, font="none 15 bold")
-lblPscore.grid(row=0, column=0, sticky=W)
-playerScoreTxt = Text(window, width=15, height=3, foreground=color1, borderwidth=0, font="none 15 bold", padx=55,
+lblPscore = Label(window, text="Player Score", bg="#d4c3e7", fg="#4d5054", font="none 17 bold")
+lblPscore.grid(row=1, column=0, sticky=W)
+playerScoreTxt = Text(window, width=15, height=3, foreground="#4d5054", borderwidth=0, font="none 17 bold", padx=55,
                       background="#d4c3e7")
-playerScoreTxt.grid(row=1, column=0, sticky=W)
+playerScoreTxt.grid(row=2, column=0, sticky=W)
 playerScoreTxt.insert(END, "0")
-lblCscore = Label(window, text="Computer Score", bg="#d4c3e7", fg=color2, font="none 15 bold")
-lblCscore.grid(row=0, column=1, sticky=W)
-compScoreTxt = Text(window, width=15, height=3, foreground=color2, background="#d4c3e7", borderwidth=0,
-                    font="none 15 bold", padx=60)
-compScoreTxt.grid(row=1, column=1, sticky=W)
+lblCscore = Label(window, text="Computer Score", bg="#d4c3e7", fg="#4d5054", font="none 17 bold")
+lblCscore.grid(row=1, column=1, sticky=W)
+compScoreTxt = Text(window, width=15, height=3, foreground="#4d5054", background="#d4c3e7", borderwidth=0,
+                    font="none 17 bold", padx=60)
+compScoreTxt.grid(row=2, column=1, sticky=W)
 compScoreTxt.insert(END, "0")
 # depth
-Label(window, text="Depth:", bg="#d4c3e7", fg="#2487fb", font="none 15 bold").grid(row=2, column=0, sticky=W)
+Label(window, text="Depth:", bg="#d4c3e7", fg="#4d5054", font="none 15 bold").grid(row=3, column=0, sticky=W, padx=100)
 depthText = Text(window, width=8, height=1, foreground="black", background="white", borderwidth=0, font="none 15 bold")
-depthText.grid(row=2, column=1, sticky=W)
+depthText.grid(row=3, column=1, sticky=W)
 # show graph button
 graphBtn = Button(window, text="Show State Graph", width=15, background="#2487fb", foreground="white",
                   font="none 15 bold", command=showGraph)
-graphBtn.grid(row=3, column=0, sticky=W)
+graphBtn.grid(row=4, column=0, sticky=W, padx=100)
 # hint button
 hintBtn = Button(window, text="Show Hint", width=15, background="#2487fb", foreground="white", font="none 15 bold",
                  command=showHint)
-hintBtn.grid(row=4, column=0, sticky=W)
-# warning
-warning = Text(window, width=20, height=2, foreground="black", background="#d4c3e7", borderwidth=0, font="none 15 bold")
-warning.grid(row=5, column=0, sticky=W)
+hintBtn.grid(row=5, column=0, sticky=W, padx=100)
 # exit btn
-exitBtn = Button(window, text="Exit Game", width=12, background="#2487fb", foreground="white", font="none 15 bold",
+exitBtn = Button(window, text="Exit Game", width=15, background="#2487fb", foreground="white", font="none 15 bold",
                  command=exitGame)
-exitBtn.grid(row=7, column=0, sticky=W)
+exitBtn.grid(row=6, column=0, sticky=W, padx=100)
 # pruning button
 pruningBtn = Button(window, text="Enable Pruning", width=15, background="#2487fb", foreground="white",
                     font="none 15 bold", command=changePruning)
-pruningBtn.grid(row=6, column=0, sticky=W)
+pruningBtn.grid(row=7, column=0, sticky=W, padx=100)
+# warning
+warning = Text(window, width=20, height=2, foreground="black", background="#d4c3e7", borderwidth=0, font="none 15 bold")
+warning.grid(row=8, column=0, sticky=W, padx=100)
 # board
-for i in range(1, 7):
+for i in range(2, 8):
     arr = []
     for j in range(2, 9):
-        btn = Button(window, image=tkImg, width=100, height=110, background="#f5f3f3",
+        btn = Button(window, image=tkImg, width=100, height=100, background="#f5f3f3",
                      command=lambda col=j - 2: play(col), border=2)
         btn.grid(row=i, column=j)
         arr.append(btn)
