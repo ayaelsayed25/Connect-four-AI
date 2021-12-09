@@ -156,7 +156,7 @@ def showHint():
 
 
 def play(col):
-    global turn, depth, currentState, pruning,board_expansion, score_expansion
+    global turn, depth, currentState, pruning,board_expansion, score_expansion, hintRow, hintCol
     # human's turn
     if turn == 0:
         # print(col)
@@ -166,11 +166,17 @@ def play(col):
         # if the position is valid
         if firstEmptyRow != -1:
             warning.delete("1.0", END)
-            if board[hintRow][hintCol]["image"] == hinttk:
+            row = firstEmptyRow
+            if board[row][col]["image"] == hinttk:
+                board[hintRow][hintCol]["image"] = playertk
+                hintRow = None
+                hintCol = None
+            elif hintCol != None and hintRow != None:
                 board[hintRow][hintCol]["image"] = tkImg
+                hintRow = None
+                hintCol = None
             # should check for the right cell col only not row
             # change the board and add player's move
-            row = firstEmptyRow
             board[row][col]["image"] = playertk
             window.update()
             # print(currentState.board)
@@ -180,6 +186,7 @@ def play(col):
             # update the score
             compScore, pScore = currentState.calculate_score()
             playerScoreTxt.insert(END, str(pScore))
+            window.update()
             turn = 1
             # computer's turn
             changeDepth()
@@ -196,6 +203,7 @@ def play(col):
             # update the score
             compScore, pScore = currentState.calculate_score()
             compScoreTxt.insert(END, str(compScore))
+            window.update()
             turn = 0
         else:
             warning.insert(END, "Wrong Play")
