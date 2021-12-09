@@ -1,9 +1,6 @@
 board_width = 7
 board_height = 6
 
-# Row = height - ( index mod height )
-# Column = index // height
-
 
 def get_row(index):
     return index % board_height

@@ -68,15 +68,15 @@ def minimax(state, k, maximizing, prune=False, alpha=-math.inf, beta=math.inf):
         return min_eval, min_state
 
 
-mama = "000000000000000000000000000000000000000000"
-minimax_play(State("000011000002000000000000000000000000000000"), 2, True)
-# print(minimax(State("000011000002000000000000000000000000000000"), 2, True))
-i = 0
-j = 0
-for state, heuristicc in minimax_expansion.items():
-    i += 1
-    print(state.board + " " + str(heuristicc))
-    if i == pow(7, j):
-        j += 1
-        i = 0
-        print('\n')
+# mama = "000000000000000000000000000000000000000000"
+# minimax_play(State("000011000002000000000000000000000000000000"), 2, True)
+# # print(minimax(State("000011000002000000000000000000000000000000"), 2, True))
+# i = 0
+# j = 0
+# for state, heuristicc in minimax_expansion.items():
+#     i += 1
+#     print(state.board + " " + str(heuristicc))
+#     if i == pow(7, j):
+#         j += 1
+#         i = 0
+#         print('\n')

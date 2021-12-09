@@ -1,9 +1,9 @@
 from tkinter import *
 from PIL import Image, ImageTk
-import networkx as nx
-import matplotlib.pyplot as plt
 from minimax import *
 from state import *
+from igraph import Graph, EdgeSeq
+import plotly.graph_objects as go
 
 # configure window
 window = Tk()
@@ -22,6 +22,8 @@ turn = 0  # 0 represents player turn and 1 represents commp turn
 board = []
 pruning = False
 currentState = State("000000000000000000000000000000000000000000", -1)
+board_expansion = []
+score_expansion = []
 # player color icon
 playerImg = Image.open('./images/pink.jpg')
 playertk = ImageTk.PhotoImage(playerImg)
@@ -50,13 +52,91 @@ def changeColor():  # swap colors between player and computer
 
 
 def showGraph():
-    G = nx.Graph()
-    edges = [(1, 2), (1, 6), (1, 3), (2, 4), (2, 5), (2, 7),
-             (6, 12), (6, 13), (6, 14), (6, "1201201201201201201201201201201201201201200")]
+    # minmaxGraph = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+    #                20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,
+    #                39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58,
+    #                59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
+    #                78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100,
+    #                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+    #                20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,
+    #                39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58,
+    #                59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
+    #                78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100
+    #                ]
+    nr_vertices = len(score_expansion)
+    G = Graph.Tree(nr_vertices, 7)  # 2 stands for children number
+    lay = G.layout('tree')
 
-    G.add_edges_from(edges)
-    nx.draw_networkx(G)
-    plt.show()
+    position = {k: lay[k] for k in range(nr_vertices)}
+    Y = [lay[k][1] for k in range(nr_vertices)]
+    M = max(Y)
+
+    es = EdgeSeq(G)  # sequence of edges
+    E = [e.tuple for e in es]  # list of edges
+
+    L = len(position)
+    Xn = [position[k][0] for k in range(L)]
+    Yn = [2 * M - position[k][1] for k in range(L)]
+    Xe = []
+    Ye = []
+    for edge in E:
+        Xe += [position[edge[0]][0], position[edge[1]][0], None]
+        Ye += [2 * M - position[edge[0]][1], 2 * M - position[edge[1]][1], None]
+
+    def make_annotations(pos, text, font_size=10, font_color='rgb(250,250,250)'):
+        L = len(pos)
+        if len(text) != L:
+            raise ValueError('The lists pos and text must have the same len')
+        annotations = []
+        for k in range(L):
+            annotations.append(
+                dict(
+                    text=score_expansion[k],  # or replace labels with a different list for the text within the circle
+                    x=pos[k][0], y=2 * M - position[k][1],
+                    xref='x1', yref='y1',
+                    font=dict(color=font_color, size=font_size),
+                    showarrow=False)
+            )
+        return annotations
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=Xe,
+                             y=Ye,
+                             mode='lines',
+                             line=dict(color='rgb(210,210,210)', width=1),
+                             hoverinfo='none'
+                             ))
+    fig.add_trace(go.Scatter(x=Xn,
+                             y=Yn,
+                             mode='markers',
+                             name='bla',
+                             marker=dict(symbol='circle-dot',
+                                         size=18,
+                                         color='#DB4551',  # '#DB4551',
+                                         line=dict(color='rgb(50,50,50)', width=1)
+                                         ),
+                             text=board_expansion,
+                             hoverinfo='text',
+                             opacity=0.8
+                             ))
+
+    axis = dict(showline=False,  # hide axis line, grid, ticklabels and  title
+                zeroline=False,
+                showgrid=False,
+                showticklabels=False,
+                )
+
+    fig.update_layout(title='Tree with Reingold-Tilford Layout',
+                      annotations=make_annotations(position, score_expansion),
+                      font_size=12,
+                      showlegend=False,
+                      xaxis=axis,
+                      yaxis=axis,
+                      margin=dict(l=40, r=40, b=85, t=100),
+                      hovermode='closest',
+                      plot_bgcolor='rgb(248,248,248)'
+                      )
+    fig.show()
 
 
 def showHint():
@@ -74,10 +154,13 @@ def showHint():
 
 
 def play(col):
-    global turn, depth, currentState, pruning
+    global turn, depth, currentState, pruning,board_expansion, score_expansion
     # human's turn
     if turn == 0:
+        print(col)
+        print(currentState.board)
         firstEmptyRow = currentState.first_empty_row(col)
+        print(firstEmptyRow)
         # if the position is valid
         if firstEmptyRow != -1:
             warning.delete(0.0, END)
@@ -87,6 +170,7 @@ def play(col):
             # change the board and add player's move
             row = firstEmptyRow
             board[row][col]["image"] = playertk
+            window.update()
             # print(currentState.board)
             # print(currentState.player_move)
             currentState.game_play(col)
@@ -98,7 +182,7 @@ def play(col):
             # computer's turn
             changeDepth()
             # call minimax
-            maxEval, currentState,board_expansion,score_expansion = minimax_play(currentState, depth, True, pruning)
+            maxEval, currentState, board_expansion, score_expansion = minimax_play(currentState, depth, True, pruning)
 
             # print(currentState.board)
             # print(currentState.player_move)

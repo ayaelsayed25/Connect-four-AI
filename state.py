@@ -57,7 +57,7 @@ class State:
                 empty_index -= 1
             else:
                 break
-        if empty_index == column - board_height:
+        if empty_index == column - board_height - 1:
             return -1
         return empty_index
 
@@ -85,8 +85,6 @@ class State:
     # Get State Heuristic score. Used in minimax algorithm
     def heuristic(self):
         board_visitor(self.connect_four)
-        print(self.computer_heuristic_score)
-        print(self.human_heuristic_score)
         return self.computer_heuristic_score - self.human_heuristic_score
 
     # Calculate distance between the required squares to connect four and the last filled square in the column
