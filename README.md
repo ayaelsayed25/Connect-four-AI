@@ -1,7 +1,7 @@
 # Connect-four-AI
 Overview:
 This assignment is a simulation for the Connect-four game. The user plays with an AI agent until the board is full. The winner at the end will be having the greater score.
-Assumptions and Details:
+Assumptions and Details: 
 The player always plays first and uses the pink-colored piece, while the computer agent uses the blue-colored piece.
 The player can make a move by pressing on the right column, and then the computer agent plays automatically.
 The player can ask the game for a hint by clicking on the button “Show a Hint”. A yellow-colored piece appears in the suggested position.  
