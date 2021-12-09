@@ -106,13 +106,26 @@ def showGraph():
                              line=dict(color='rgb(210,210,210)', width=1),
                              hoverinfo='none'
                              ))
-    fig.add_trace(go.Scatter(x=Xn,
-                             y=Yn,
+    fig.add_trace(go.Scatter(x=Xn[0:1],
+                             y=Yn[0:1],
                              mode='markers',
                              name='bla',
                              marker=dict(symbol='circle-dot',
                                          size=18,
                                          color='#DB4551',  # '#DB4551',
+                                         line=dict(color='rgb(50,50,50)', width=1)
+                                         ),
+                             text=board_expansion,
+                             hoverinfo='text',
+                             opacity=0.8
+                             ))
+    fig.add_trace(go.Scatter(x=Xn[1:],
+                             y=Yn[1:],
+                             mode='markers',
+                             name='bla',
+                             marker=dict(symbol='circle-dot',
+                                         size=18,
+                                         color="#00294F",  # '#DB4551',
                                          line=dict(color='rgb(50,50,50)', width=1)
                                          ),
                              text=board_expansion,
