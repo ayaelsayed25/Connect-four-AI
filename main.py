@@ -237,28 +237,28 @@ compScoreTxt = Text(window, width=15, height=3, foreground="#4d5054", background
 compScoreTxt.grid(row=2, column=1, sticky=W)
 compScoreTxt.insert(END, "0")
 # depth
-Label(window, text="Depth:", bg="#d4c3e7", fg="#4d5054", font="none 15 bold").grid(row=3, column=0, sticky=W, padx=100)
+Label(window, text="Depth:", bg="#d4c3e7", fg="#4d5054", font="none 15 bold").grid(row=3, column=0, sticky=W, padx=20)
 depthText = Text(window, width=8, height=1, foreground="black", background="white", borderwidth=0, font="none 15 bold")
 depthText.grid(row=3, column=1, sticky=W)
 # show graph button
 graphBtn = Button(window, text="Show State Graph", width=15, background="#2487fb", foreground="white",
                   font="none 15 bold", command=showGraph)
-graphBtn.grid(row=4, column=0, sticky=W, padx=100)
+graphBtn.grid(row=4, column=0, sticky=W, padx=0)
 # hint button
 hintBtn = Button(window, text="Show Hint", width=15, background="#2487fb", foreground="white", font="none 15 bold",
                  command=showHint)
-hintBtn.grid(row=5, column=0, sticky=W, padx=100)
+hintBtn.grid(row=5, column=0, sticky=W, padx=0)
 # exit btn
 exitBtn = Button(window, text="Exit Game", width=15, background="#2487fb", foreground="white", font="none 15 bold",
                  command=exitGame)
-exitBtn.grid(row=6, column=0, sticky=W, padx=100)
+exitBtn.grid(row=6, column=0, sticky=W, padx=0)
 # pruning button
 pruningBtn = Button(window, text="Enable Pruning", width=15, background="#2487fb", foreground="white",
                     font="none 15 bold", command=changePruning)
-pruningBtn.grid(row=7, column=0, sticky=W, padx=100)
+pruningBtn.grid(row=7, column=0, sticky=W, padx=0)
 # warning
 warning = Text(window, width=20, height=2, foreground="black", background="#d4c3e7", borderwidth=0, font="none 15 bold")
-warning.grid(row=8, column=0, sticky=W, padx=100)
+warning.grid(row=8, column=0, sticky=W, padx=0)
 # board
 for i in range(2, 8):
     arr = []
