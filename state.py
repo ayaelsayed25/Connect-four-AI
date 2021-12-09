@@ -7,17 +7,17 @@ def board_visitor(visitor):
     for i in range(board_height - 1, -1, -1):
         visitor(i, right)
     # vertically
-    for i in range(board_height - 1, board_width*board_height, board_height):
+    for i in range(board_height - 1, board_width * board_height, board_height):
         visitor(i, up)
     # Diagonally
     for i in range(board_height - 2, board_height - 4, -1):
         visitor(i, up_right)
-    for i in range(board_height - 1, (board_width - 2)*board_height-1, board_height):
+    for i in range(board_height - 1, (board_width - 2) * board_height - 1, board_height):
         visitor(i, up_right)
 
-    for i in range(board_height*board_width - 2, board_height*board_width - 4, -1):
+    for i in range(board_height * board_width - 2, board_height * board_width - 4, -1):
         visitor(i, up_left)
-    for i in range(board_height*board_width - 1, (board_width - 2)*board_height, -board_height):
+    for i in range(board_height * board_width - 1, (board_width - 4) * board_height, -board_height):
         visitor(i, up_left)
 
 
@@ -36,7 +36,7 @@ class State:
     # Add Human play to the current board
     def game_play(self, column):
         index = self.first_empty_index(column)
-        self.board = self.board[:index] + '2' + self.board[index+1:]
+        self.board = self.board[:index] + '2' + self.board[index + 1:]
 
     # Get Index of computer play
     def get_index(self):
@@ -51,7 +51,7 @@ class State:
 
     # Get First empty index in the Board string in specific row
     def first_empty_index(self, column):
-        empty_index = column = column*board_height + board_height - 1
+        empty_index = column = column * board_height + board_height - 1
         for j in range(column, column - board_height, -1):
             if self.board[empty_index] != '0':
                 empty_index -= 1
@@ -65,7 +65,7 @@ class State:
     def first_empty_row(self, column):
         index = self.first_empty_index(column)
         print(index == -1)
-        if index == -1 :
+        if index == -1:
             return -1
         return get_row(index)
 
@@ -77,9 +77,9 @@ class State:
             if empty_index != -1:
                 board = self.board
                 if computer_turn:
-                    board = board[:empty_index] + '1' + board[empty_index+1:]
+                    board = board[:empty_index] + '1' + board[empty_index + 1:]
                 else:
-                    board = board[:empty_index] + '2' + board[empty_index+1:]
+                    board = board[:empty_index] + '2' + board[empty_index + 1:]
                 states.append(State(board, empty_index))
             else:
                 states.append(None)
@@ -129,8 +129,11 @@ class State:
                     computer += 1
                 elif self.board[index] == '2':
                     human += 1
+                print(index)
+                # print(self.board[index])
                 index = direction(index)
             temp = direction(temp)
+            print('\n')
             if computer == 4:
                 self.computer_score += 1
             elif human == 4:
